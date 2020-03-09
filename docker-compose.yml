@@ -1,0 +1,84 @@
+version: '3.2'
+services:
+  sentry:
+    container_name: sentry
+    image: sentry:9.1.1
+    network_mode: bridge
+    restart: always
+    volumes:
+      - /opt/pasta-local/sentry/files:/var/lib/sentry/files
+    ports:
+      - '9090:9000'
+    links:
+      - redis
+      - postgres
+    tty: true
+    stdin_open: true
+    environment:
+      - SENTRY_SECRET_KEY='secret-key-gerada'
+      - VIRTUAL_HOST=sentry.dominio.com.br
+      - LETSENCRYPT_HOST=sentry.dominio.com.br
+      - LETSENCRYPT_EMAIL=seu-email@dominio.com.br
+      - SENTRY_EMAIL_HOST='smtp.gmail.com'
+      - SENTRY_EMAIL_PORT='587'
+      - SENTRY_EMAIL_USER='seu-email@dominio.com.br'
+      - SENTRY_EMAIL_PASSWORD='sua-senha'
+      - SENTRY_EMAIL_USE_TLS='true'
+
+
+  sentry-cron:
+    container_name: sentry-cron
+    image: sentry:9.1.1
+    network_mode: bridge
+    restart: always
+    command: run cron
+    links:
+      - postgres
+      - redis
+    environment:
+      - SENTRY_SECRET_KEY='secret-key-gerada'
+      - SENTRY_EMAIL_HOST='smtp.gmail.com'
+      - SENTRY_EMAIL_PORT='587'
+      - SENTRY_EMAIL_USER='seu-email@dominio.com.br'
+      - SENTRY_EMAIL_PASSWORD='sua-senha'
+      - SENTRY_EMAIL_USE_TLS='true'
+
+  sentry-worker:
+    container_name: sentry-worker
+    image: sentry:9.1.1
+    network_mode: bridge
+    restart: always
+    command: run worker
+    links:
+      - postgres
+      - redis
+    environment:
+      - SENTRY_SECRET_KEY='secret-key-gerada'
+      - SENTRY_EMAIL_HOST='smtp.gmail.com'
+      - SENTRY_EMAIL_PORT='587'
+      - SENTRY_EMAIL_USER='seu-email@dominio.com.br'
+      - SENTRY_EMAIL_PASSWORD='sua-senha'
+      - SENTRY_EMAIL_USE_TLS='true'
+
+  redis:
+    container_name: redis
+    image: redis:5.0
+    network_mode: bridge
+    restart: always
+    volumes:
+      - /opt/pasta-local/sentry/redis/redis-data:/data
+    ports:
+      - '6379:6379'
+
+  postgres:
+    container_name: postgres
+    image: postgres:9.5
+    network_mode: bridge
+    restart: always
+    environment:
+      - POSTGRES_USER=sentry
+      - POSTGRES_PASSWORD=senha-postgres*
+    volumes:
+      - /opt/pasta-local/sentry/postgres/pg-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
