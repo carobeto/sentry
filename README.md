@@ -10,5 +10,5 @@ Sentry Install:
 - Execute "docker-compose exec sentry sentry upgrade" para configurar o banco de dados e criar o usuário "admin"
     (Opcional) Execute "docker-compose exec sentry pip install sentry-slack" se desejar o plugin do Slack, que também pode ser instalado mais tarde.
 - Execute "docker-compose restart sentry"
-  Feito, agora o Sentry está rodando na porta pública 9090
+- Feito, agora o Sentry está rodando na porta pública 9090
 
