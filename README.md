@@ -1,4 +1,5 @@
-Arquivo para criar infraestrutura de Sentry usando NGINX com LetsEncrypt como servidor Proxy
+Arquivo para criar infraestrutura de Sentry usando NGINX com LetsEncrypt como servidor Proxy.
+A linha "LETSENCRYPT_HOST=sentry.dominio.com.br" fará com que o NGINX crie automaticamente o Certificado HTTPS para o contâiner.
 
 Sentry Install:
 
